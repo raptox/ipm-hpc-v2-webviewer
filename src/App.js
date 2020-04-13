@@ -24,7 +24,8 @@ export default class App extends Component {
       balanceZoomData: {},
       balanceZoomEnd: false,
       balanceZoomStart: true,
-      balanceZoomMaxValue: 0
+      balanceZoomMaxValue: 0,
+      balanceZoomPages: 0
     };
   }
 
@@ -84,7 +85,10 @@ export default class App extends Component {
     let end;
     if (newRange > dataSize) {
       end = dataSize;
-      this.setState({ balanceZoomEnd: true });
+      this.setState({ 
+        balanceZoomEnd: true,
+        balanceZoomIndex: newZoomIndex 
+      });
     } else {
       end = newRange;
       this.setState({ balanceZoomIndex: newZoomIndex });
@@ -98,14 +102,17 @@ export default class App extends Component {
       window.alert('already on the first page');
       return;
     }
-    if (this.state.balanceZoomIndex === 1) {
+    if (this.state.balanceZoomIndex === 2) {
       this.recalculateBalanceData(0, this.state.balanceZoomPageSize);
-      this.setState({ balanceZoomStart: true });
+      this.setState({ 
+        balanceZoomIndex: 1,
+        balanceZoomStart: true 
+      });
       return;
     }
     let newZoomIndex = this.state.balanceZoomIndex - 1;
-    let start = newZoomIndex * this.state.balanceZoomPageSize;
-    let end = this.state.balanceZoomIndex * this.state.balanceZoomPageSize;
+    let start = (newZoomIndex-1) * this.state.balanceZoomPageSize;
+    let end = newZoomIndex * this.state.balanceZoomPageSize;
     this.recalculateBalanceData(start, end);
     this.setState({
       balanceZoomIndex: newZoomIndex,
@@ -255,6 +262,7 @@ export default class App extends Component {
                     >
                       Next Page
                     </Button>
+                    <span class="pageInfo">Page: {this.state.balanceZoomIndex} / {this.state.balanceZoomPages}</span>
                   </div>
                 )}
                 <Bar
@@ -435,8 +443,10 @@ export default class App extends Component {
             maxValues.push(tempMaxValue);
           }
         );
-        console.log(Math.max(...maxValues));
-        this.setState({ balanceZoomMaxValue: Math.max(...maxValues) });
+        this.setState({ 
+          balanceZoomMaxValue: Math.max(...maxValues),
+          balanceZoomPages: Math.ceil(this.state.parsedContent.balanceData.labels.length / this.state.balanceZoomPageSize)
+         });
       }
       this.unZoomBalanceData();
     });
