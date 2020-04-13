@@ -189,9 +189,6 @@ export default class App extends Component {
         <ul>
           <li><a href="#" onClick={() => this.openFile(sin1008)}>sin 1008</a></li>
           <li><a href="#" onClick={() => this.openFile(pin1008)}>pin 1008</a></li>
-          <li><a href="#" onClick={() => this.openFile(mdft_03)}>MDFT 03</a></li>
-          <li><a href="#" onClick={() => this.openFile(mdft_04)}>MDFT 04</a></li>
-          <li><a href="#" onClick={() => this.openFile(mdft_05)}>MDFT 05</a></li>
         </ul>
 
         {content && (
