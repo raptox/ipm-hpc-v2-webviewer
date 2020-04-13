@@ -40,7 +40,7 @@ export default class App extends Component {
     this.setState({
       balanceZoomIndex: 1,
       balanceZoomStart: true,
-      balanceZoomEnd: false
+      balanceZoomEnd: this.state.balanceZoomPages === 1 ? true : false
     });
   }
 
@@ -59,18 +59,38 @@ export default class App extends Component {
         balanceZoom: false,
         balanceZoomIndex: 1,
         balanceZoomStart: true,
-        balanceZoomEnd: false
+        balanceZoomEnd: this.state.balanceZoomPages === 1 ? true : false
       });
     });
   }
 
   unZoomBalanceData() {
     if (this.state.parsedContent.balanceData.labels) {
+      this.setState({
+        balanceZoom: false,
+        balanceZoomIndex: 1,
+        balanceZoomStart: true,
+        balanceZoomEnd: this.state.balanceZoomPages === 1 ? true : false
+      });
       this.recalculateBalanceData(
         0,
         this.state.parsedContent.balanceData.labels.length
       );
     }
+  }
+
+  initAll() {
+    this.setState({
+      balanceZoom: false,
+      balanceZoomIndex: 1,
+      balanceZoomStart: true,
+      balanceZoomEnd: this.state.balanceZoomPages === 1 ? true : false,
+      balanceSort: false
+    });
+    this.recalculateBalanceData(
+      0,
+      this.state.parsedContent.balanceData.labels.length
+    );
   }
 
   nextPageBalance() {
@@ -237,14 +257,14 @@ export default class App extends Component {
                   color="primary"
                   onClick={() => this.toggleBalanceZoom()}
                 >
-                  Toggle Zoom
+                  {this.state.balanceZoom ? 'Zoom Out' : 'Zoom In'}
                 </Button>{' '}
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={() => this.toggleBalanceSort()}
                 >
-                  Toggle Sort
+                  {this.state.balanceSort ? 'Unsort MPI time' : 'Sort MPI time'}
                 </Button>
                 {this.state.balanceZoom && (
                   <div>
@@ -448,7 +468,7 @@ export default class App extends Component {
           balanceZoomPages: Math.ceil(this.state.parsedContent.balanceData.labels.length / this.state.balanceZoomPageSize)
          });
       }
-      this.unZoomBalanceData();
+      this.initAll();
     });
   }
 }
